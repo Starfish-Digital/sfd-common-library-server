@@ -1,0 +1,1961 @@
+openapi: 3.0.0
+info:
+  title: Account-data-exp-api
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /Secret:
+    get:
+      operationId: getSecretByName
+      parameters:
+      - description: Provide secretName
+        example: kkhdh-sc
+        explode: true
+        in: query
+        name: secretName
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseSecrets'
+          description: Successfully retrieved the secret
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get a secret by name
+      tags:
+      - secrets
+      x-eov-operation-handler: controllers/SecretsController
+  /certificate:
+    get:
+      operationId: getPublicKeyByKid
+      parameters:
+      - description: Provide kid
+        example: hsbc-public.key
+        explode: true
+        in: query
+        name: kid
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: s3/dev-certificates-bucket
+        example: s3/dev-certificates-bucket
+        explode: true
+        in: query
+        name: certificatePath
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseKid'
+          description: Successfully retrieved the public key
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get public key by Key ID (kid)
+      tags:
+      - Certificates
+      x-eov-operation-handler: controllers/CertificatesController
+  /consents:
+    get:
+      operationId: getConsentById
+      parameters:
+      - description: Provide accountId
+        example: SCBXX123
+        explode: true
+        in: query
+        name: accountId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide bic
+        example: HSBCSGSGXXX
+        explode: true
+        in: query
+        name: bic
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide consentId
+        example: ""
+        explode: true
+        in: query
+        name: consentId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide userUuid
+        example: ""
+        explode: true
+        in: query
+        name: userUuid
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide institutionId
+        example: hsbc-bank
+        explode: true
+        in: query
+        name: institutionId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: provide accountNumber
+        example: 1234xxxx
+        explode: true
+        in: query
+        name: accountNumber
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseConsents'
+          description: Successfully retrieved the consent
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: "Get consets by accountId,bic,consentId,userUuid,institutionId and\
+        \ accountNumber"
+      tags:
+      - Consents
+      x-eov-operation-handler: controllers/ConsentsController
+  /subscriptions:
+    get:
+      operationId: getSubscriptionBySubscriptionId
+      parameters:
+      - description: Provide subscriptionId
+        example: HSBCSGS89470
+        explode: true
+        in: query
+        name: subscriptionId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide consentId
+        example: ""
+        explode: true
+        in: query
+        name: consentId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide userUuid
+        example: ""
+        explode: true
+        in: query
+        name: userUuid
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide institutionId
+        example: hsbc-bank
+        explode: true
+        in: query
+        name: institutionId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseConsents'
+          description: Successfully retrieved the subscription
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get subscription data by subscriptionId and institutionId
+      tags:
+      - Subscriptions
+      x-eov-operation-handler: controllers/SubscriptionsController
+  /auth/refreshToken:
+    post:
+      operationId: refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/refreshTokenRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseAuthToken'
+          description: Successfully refreshed token
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseUnauthorized'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Update the token using the refresh token
+      tags:
+      - Authentication
+      x-eov-operation-handler: controllers/AuthenticationController
+  /users:
+    get:
+      operationId: getUsersByUserUuid
+      parameters:
+      - description: Provide emailId
+        example: test@gmail.com
+        explode: true
+        in: query
+        name: emailId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide onboardingTpp
+        example: khdfkh3644jk
+        explode: true
+        in: query
+        name: onboardingTpp
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide consentId
+        example: ""
+        explode: true
+        in: query
+        name: consentId
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide userUuid
+        example: ""
+        explode: true
+        in: query
+        name: userUuid
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Provide institutionId
+        example: hsbc-bank
+        explode: true
+        in: query
+        name: institutionId
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseUsers'
+          description: Successfully retrieved the user by userUuid
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get users by userUuid
+      tags:
+      - Users
+      x-eov-operation-handler: controllers/UsersController
+    put:
+      operationId: updateUsersByUserUuid
+      parameters:
+      - description: Provide userUuid
+        example: ""
+        explode: true
+        in: query
+        name: userUuid
+        required: false
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateuserRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseUsers'
+          description: Successfully retrieved the user by userUuid
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Not found
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Update users by userUuid
+      tags:
+      - Users
+      x-eov-operation-handler: controllers/UsersController
+  /Tpp:
+    get:
+      operationId: getOnboardingTPPByInstitutionId
+      parameters:
+      - description: Provide institutionId
+        example: hsbc-bank
+        explode: true
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseTpp'
+          description: Successfully retrieved the onboarding TPP
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get onboarding TPP by institutionId
+      tags:
+      - Tpp
+      x-eov-operation-handler: controllers/TppController
+  /encrypt:
+    post:
+      operationId: encryptData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/encryptRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseEncrypt'
+          description: Successfully encrypted the data
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Encrypt data using a specified encryption key
+      tags:
+      - Utility
+      x-eov-operation-handler: controllers/UtilityController
+  /decrypt:
+    post:
+      operationId: decryptData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/decryptRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseDecrypt'
+          description: Successfully decrypted the data
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Decrypt data using a specified encryption key
+      tags:
+      - Utility
+      x-eov-operation-handler: controllers/UtilityController
+  /compress:
+    post:
+      operationId: compressData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/compressRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseEncode'
+          description: Successfully compressed the data
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Compress data
+      tags:
+      - Utility
+      x-eov-operation-handler: controllers/UtilityController
+  /decompress:
+    post:
+      operationId: decompressData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/decompressRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseDecode'
+          description: Successfully decompressed the data
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Decompress data
+      tags:
+      - Utility
+      x-eov-operation-handler: controllers/UtilityController
+  /checkJwtExpiry:
+    post:
+      operationId: checkJwtExpiry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jwtRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseCheckJwtExpiry'
+          description: Successfully checked the JWT token expiry
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Check if a JWT token has expired
+      tags:
+      - Authentication
+      x-eov-operation-handler: controllers/AuthenticationController
+  /createHash:
+    post:
+      operationId: createHash
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hashRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseHash'
+          description: Successfully generated the hash of the payment data
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: "Create a secure hash (e.g., SHA-256) of payment data"
+      tags:
+      - Utility
+      x-eov-operation-handler: controllers/UtilityController
+  /verifyJwt:
+    post:
+      operationId: verifyJwt
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jwtVerifyRequest'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseVerifyJwt'
+          description: Successfully verified the JWT token
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Verify a JWT token using a public key
+      tags:
+      - Authentication
+      x-eov-operation-handler: controllers/AuthenticationController
+  /Config:
+    get:
+      operationId: getInstitutionConfig
+      parameters:
+      - description: Provide targetEntity
+        example: hsbc-bank
+        explode: true
+        in: query
+        name: targetEntity
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseConfig'
+          description: Successfully retrieved the institution configuration (schema
+            table) for the given authorization URL
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: "Get institution configuration (schema table) by authorization URL,environmentType\
+        \ and institutionId"
+      tags:
+      - Configuration
+      x-eov-operation-handler: controllers/ConfigurationController
+  /Config/validate:
+    get:
+      operationId: getInstitutionConfigByAuthorizationUrl
+      parameters:
+      - description: Provide authorizationUrl
+        example: deutchbank@2345o5
+        explode: true
+        in: query
+        name: authorizationUrl
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/successResponseConfig'
+          description: Successfully retrieved the institution configuration (schema
+            table) for the given authorization URL
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseBadRequest'
+          description: Bad request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseNotFound'
+          description: Not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseForServerError'
+          description: Server error
+      summary: Get institution configuration (schema table) by authorization URL
+      tags:
+      - Configuration
+      x-eov-operation-handler: controllers/ConfigurationController
+components:
+  parameters:
+    correlationId:
+      description: "**Required** for use when any client (except partners using SPIs)\
+        \ invokes the payment initiation API. A unique identifier value for tracing\
+        \ api calls. To be used as An identifier for service provider (Starfish Digital)\
+        \ to \nreject duplicate payments"
+      explode: false
+      in: header
+      name: x-correlation-Id
+      required: true
+      schema:
+        pattern: "^[a-zA-Z0-9-_]+$"
+        type: string
+      style: simple
+    userUuid:
+      description: Provide userUuid
+      example: ""
+      explode: true
+      in: query
+      name: userUuid
+      required: false
+      schema:
+        type: string
+      style: form
+    emailId:
+      description: Provide emailId
+      example: test@gmail.com
+      explode: true
+      in: query
+      name: emailId
+      required: false
+      schema:
+        type: string
+      style: form
+    onboardingTpp:
+      description: Provide onboardingTpp
+      example: khdfkh3644jk
+      explode: true
+      in: query
+      name: onboardingTpp
+      required: false
+      schema:
+        type: string
+      style: form
+    consentId:
+      description: Provide consentId
+      example: ""
+      explode: true
+      in: query
+      name: consentId
+      required: false
+      schema:
+        type: string
+      style: form
+    institutionId:
+      description: Provide institutionId
+      example: hsbc-bank
+      explode: true
+      in: query
+      name: institutionId
+      required: false
+      schema:
+        type: string
+      style: form
+    environmentType:
+      description: Provide environmentType
+      example: dev
+      explode: true
+      in: query
+      name: environmentType
+      required: false
+      schema:
+        type: string
+      style: form
+    accountId:
+      description: Provide accountId
+      example: SCBXX123
+      explode: true
+      in: query
+      name: accountId
+      required: false
+      schema:
+        type: string
+      style: form
+    bic:
+      description: Provide bic
+      example: HSBCSGSGXXX
+      explode: true
+      in: query
+      name: bic
+      required: false
+      schema:
+        type: string
+      style: form
+    authorizationUrl:
+      description: Provide authorizationUrl
+      example: deutchbank@2345o5
+      explode: true
+      in: query
+      name: authorizationUrl
+      required: false
+      schema:
+        type: string
+      style: form
+    secretName:
+      description: Provide secretName
+      example: kkhdh-sc
+      explode: true
+      in: query
+      name: secretName
+      required: true
+      schema:
+        type: string
+      style: form
+    subscriptionId:
+      description: Provide subscriptionId
+      example: HSBCSGS89470
+      explode: true
+      in: query
+      name: subscriptionId
+      required: false
+      schema:
+        type: string
+      style: form
+    kid:
+      description: Provide kid
+      example: hsbc-public.key
+      explode: true
+      in: query
+      name: kid
+      required: true
+      schema:
+        type: string
+      style: form
+    certificatePath:
+      description: s3/dev-certificates-bucket
+      example: s3/dev-certificates-bucket
+      explode: true
+      in: query
+      name: certificatePath
+      required: true
+      schema:
+        type: string
+      style: form
+    accountNumber:
+      description: provide accountNumber
+      example: 1234xxxx
+      explode: true
+      in: query
+      name: accountNumber
+      required: false
+      schema:
+        type: string
+      style: form
+  schemas:
+    successResponseDecode:
+      example:
+        data:
+        - inputStr: eyJhbGciOi...
+        - inputStr: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Compress successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseDecode_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseDecode_data_inner'
+          type: array
+      type: object
+    successResponseEncode:
+      example:
+        data:
+        - inputStr: eyJhbGciOi...
+        - inputStr: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Compress successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseDecode_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseDecode_data_inner'
+          type: array
+      type: object
+    successResponseEncrypt:
+      example:
+        data:
+        - encryptStr: eyJhbGciOi...
+        - encryptStr: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Compress successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseDecode_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseEncrypt_data_inner'
+          type: array
+      type: object
+    successResponseDecrypt:
+      example:
+        data:
+        - DecryptStr: eyJhbGciOi...
+        - DecryptStr: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Decrypt successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseDecrypt_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseDecrypt_data_inner'
+          type: array
+      type: object
+    successResponseCheckJwtExpiry:
+      example:
+        data:
+        - jwtToken: eyJhbGciOi...
+        - jwtToken: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Jwt-Token expiry check successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseCheckJwtExpiry_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseCheckJwtExpiry_data_inner'
+          type: array
+      type: object
+    successResponseHash:
+      example:
+        data:
+        - payloadHash: eyJhbGciOi...
+        - payloadHash: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: Payload-hash created successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseHash_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseHash_data_inner'
+          type: array
+      type: object
+    successResponseVerifyJwt:
+      example:
+        data:
+        - jwtToken: eyJhbGciOi...
+        - jwtToken: eyJhbGciOi...
+        success: true
+        meta:
+          code: 200
+          message: jwtToken verify successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseVerifyJwt_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseCheckJwtExpiry_data_inner'
+          type: array
+      type: object
+    successResponseConfig:
+      example:
+        data:
+        - schemaVersion: 1.0.0
+          targetEntity: kyriba-to-deutsche-bank
+          targetEntityType: post-pipeline-accounting-data-expi
+          schemaId: "65"
+          schemaProvider: Starfish Aggregator
+          schemaType: inputSanitizationSchema
+          schemaMetaData:
+            clientPath: /banking/transactions/v2
+            basePath: /gw/dbapi
+            host: simulator-api.db.com
+            accountPath: /banking/cashAccounts/v2/
+            clientConfing:
+              grantType: clent-credentials
+        - schemaVersion: 1.0.0
+          targetEntity: kyriba-to-deutsche-bank
+          targetEntityType: post-pipeline-accounting-data-expi
+          schemaId: "65"
+          schemaProvider: Starfish Aggregator
+          schemaType: inputSanitizationSchema
+          schemaMetaData:
+            clientPath: /banking/transactions/v2
+            basePath: /gw/dbapi
+            host: simulator-api.db.com
+            accountPath: /banking/cashAccounts/v2/
+            clientConfing:
+              grantType: clent-credentials
+        success: true
+        meta:
+          code: 200
+          message: jwtToken verify successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseVerifyJwt_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseConfig_data_inner'
+          type: array
+      type: object
+    successResponseSecrets:
+      example:
+        data:
+        - secrets: ehkdh-sc-bank
+        - secrets: ehkdh-sc-bank
+        success: true
+        meta:
+          code: 200
+          message: secrets fetch successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseSecrets_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseSecrets_data_inner'
+          type: array
+      type: object
+    successResponseKid:
+      example:
+        data:
+        - keyId: hsbc-public.key
+        - keyId: hsbc-public.key
+        success: true
+        meta:
+          code: 200
+          message: keyId fetch successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseKid_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseKid_data_inner'
+          type: array
+      type: object
+    successResponseAuthToken:
+      example:
+        data:
+        - Access-Token: lfkhfjefekfjefgek
+        - Access-Token: lfkhfjefekfjefgek
+        success: true
+        meta:
+          code: 200
+          message: Token fetch successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseAuthToken_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseAuthToken_data_inner'
+          type: array
+      type: object
+    successResponseTpp:
+      example:
+        data:
+        - name: sc-bank
+          id: lfkhfjefekfjefgek
+          webhookUrl: lfkhfjefekfjefgek
+        - name: sc-bank
+          id: lfkhfjefekfjefgek
+          webhookUrl: lfkhfjefekfjefgek
+        success: true
+        meta:
+          code: 200
+          message: OnboardingTpp fetch successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseTpp_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseTpp_data_inner'
+          type: array
+      type: object
+    successResponseUsers:
+      example:
+        data:
+        - consentId: lfkhfjefekfjefgek
+          userUuid: lfkhfjefekfjefgek
+          emailId: lfkhfjefekfjefgek
+          onboardingTpp: lfkhfjefekfjefgek
+        - consentId: lfkhfjefekfjefgek
+          userUuid: lfkhfjefekfjefgek
+          emailId: lfkhfjefekfjefgek
+          onboardingTpp: lfkhfjefekfjefgek
+        success: true
+        meta:
+          code: 200
+          message: User fetch successfully
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseUsers_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseUsers_data_inner'
+          type: array
+      type: object
+    successResponseConsents:
+      example:
+        consentTokenStatus: ACTIVE
+        consentId: 0762aed-6ce5-44fd-bf8a
+        data:
+        - resourceSelection: true
+          institutionId: netsuite-erp
+          data:
+            country: Global
+            countryFlag: global.png
+            channel: API
+            aggregatorLogo: starfish_only_logo.png
+            aggregatorName: Starfish Digital
+            aggregatorId: starfish
+            services:
+            - domain: accountInfo
+              name: Bank Transactions
+              id: bankTransactions
+              status: ACTIVE
+            - domain: accountInfo
+              name: Bank Transactions
+              id: bankTransactions
+              status: ACTIVE
+            orgId: "9616833"
+            status: ACTIVE
+          offlineApproval: false
+          environmentType: SANDBOX
+          formlyId: netsuite
+          date_creation: 2024-05-10T12:32:24.115Z
+          tenantName: rohit-dev-local
+          institutionName: Netsuite
+          institutionLogo: netsuite.png
+          userUuid: 0oagsbs51vewwiPuO697
+          subType: Account-Information
+          institutionSchemaId: ""
+        - resourceSelection: true
+          institutionId: netsuite-erp
+          data:
+            country: Global
+            countryFlag: global.png
+            channel: API
+            aggregatorLogo: starfish_only_logo.png
+            aggregatorName: Starfish Digital
+            aggregatorId: starfish
+            services:
+            - domain: accountInfo
+              name: Bank Transactions
+              id: bankTransactions
+              status: ACTIVE
+            - domain: accountInfo
+              name: Bank Transactions
+              id: bankTransactions
+              status: ACTIVE
+            orgId: "9616833"
+            status: ACTIVE
+          offlineApproval: false
+          environmentType: SANDBOX
+          formlyId: netsuite
+          date_creation: 2024-05-10T12:32:24.115Z
+          tenantName: rohit-dev-local
+          institutionName: Netsuite
+          institutionLogo: netsuite.png
+          userUuid: 0oagsbs51vewwiPuO697
+          subType: Account-Information
+          institutionSchemaId: ""
+        success: true
+        meta:
+          code: 200
+          message: subcription fetch successfully
+        consentTokenExpiry: 2025-06-26T07:36:16
+        subscriptionId: "1231241"
+      properties:
+        success:
+          example: true
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/successResponseConsents_meta'
+        data:
+          items:
+            $ref: '#/components/schemas/successResponseConsents_data_inner'
+          type: array
+        subscriptionId:
+          example: "1231241"
+          type: string
+        consentId:
+          example: 0762aed-6ce5-44fd-bf8a
+          type: string
+        consentTokenExpiry:
+          example: 2025-06-26T07:36:16
+          type: string
+        consentTokenStatus:
+          example: ACTIVE
+          type: string
+      type: object
+    ErrorResponseNotFound:
+      example:
+        data:
+          reason: No data found
+        success: false
+        meta:
+          code: 404
+          message: No data found
+      properties:
+        success:
+          example: false
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/ErrorResponseNotFound_meta'
+        data:
+          $ref: '#/components/schemas/ErrorResponseNotFound_data'
+      type: object
+    ErrorResponseUnauthorized:
+      example:
+        data:
+          reason: Unauthorized
+        success: false
+        meta:
+          code: 401
+          message: Unauthorized
+      properties:
+        success:
+          example: false
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/ErrorResponseUnauthorized_meta'
+        data:
+          $ref: '#/components/schemas/ErrorResponseUnauthorized_data'
+      type: object
+    ErrorResponseBadRequest:
+      example:
+        data:
+          reason: Invalid data provided
+        success: false
+        meta:
+          code: 400
+          message: Bad Request
+      properties:
+        success:
+          example: false
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/ErrorResponseBadRequest_meta'
+        data:
+          $ref: '#/components/schemas/ErrorResponseBadRequest_data'
+      type: object
+    ErrorResponseForbidden:
+      properties:
+        success:
+          example: false
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/ErrorResponseForbidden_meta'
+        data:
+          $ref: '#/components/schemas/ErrorResponseForbidden_data'
+      type: object
+    ErrorResponseForServerError:
+      example:
+        data:
+          reason: Internal Server Error
+        success: false
+        meta:
+          code: 500
+          message: Server error
+      properties:
+        success:
+          example: false
+          type: boolean
+        meta:
+          $ref: '#/components/schemas/ErrorResponseForServerError_meta'
+        data:
+          $ref: '#/components/schemas/ErrorResponseForServerError_data'
+      type: object
+    refreshTokenRequest:
+      properties:
+        access_token:
+          example: jhkhfkhfkhkdnkhdkhdk
+          type: string
+      type: object
+    updateuserRequest:
+      properties:
+        userUuid:
+          example: lfkhfjefekfjefgek
+          type: string
+        onboardingTpp:
+          example: lfkhfjefekfjefgek
+          type: string
+        consentId:
+          example: lfkhfjefekfjefgek
+          type: string
+        emailId:
+          example: lfkhfjefekfjefgek
+          type: string
+      type: object
+    encryptRequest:
+      properties:
+        payload:
+          example: qI6yq6GxVq1fGfA2kFb9s0GdtdnmK6XH5GOA3j9+d60=
+          type: string
+        algo:
+          example: AES-256
+          type: string
+        parameters:
+          $ref: '#/components/schemas/encryptRequest_parameters'
+      type: object
+    decryptRequest:
+      properties:
+        payload:
+          example: qI6yq6GxVq1fGfA2kFb9s0GdtdnmK6XH5GOA3j9+d60=
+          type: string
+        algo:
+          example: AES-256
+          type: string
+        parameters:
+          $ref: '#/components/schemas/encryptRequest_parameters'
+      type: object
+    compressRequest:
+      properties:
+        rawData:
+          example: Hello jagruti
+          type: object
+      type: object
+    decompressRequest:
+      properties:
+        compressData:
+          example: H4sIAAAAAAAA/8pIzcnJVyjPL8pJUQQAlRmFGwwAAAA=
+          type: object
+      type: object
+    jwtRequest:
+      properties:
+        jwtToken:
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJTTTAwMUBoc2JjLWJhbmstc2luZ2xlUGF5bWVudEluc3RydWN0aW9uU2luZ2Fwb3JlIiwiYXVkIjoiaHR0cHM6Ly9leGFtcGxlLXNlcnZpY2UtcHJvdmlkZXIuY29tLyIsImtpZCI6InNpZ25hdHVyZS1rZXktMTIwMjI0IiwiaXNzIjoiaHR0cHM6Ly9ydWJ5LnRyZWFzdXJ5LWZhY3RvcnkuY29tL2dhdGV3YXkiLCJwYXlsb2FkX2hhc2giOiI3NjYzZWNiYjc0NGE1YjFjNTJmMmFlZTMyYWVlYmEyMDMyOTFhMWQxMWQyOTIwZjAxNWQ1ZjYyMmRmYjdkMWU4IiwiZXhwIjoxNzg4MDcyNjMzLCJpYXQiOjE3MTA5MTk0MjgsImp0aSI6IjcxN2NhMTJiLWU1Y2QtNDVkMy04NzU0LTQ4NDhmYTI0NGRjMiJ9.TgI_-Vdl75mVmXYT2vKkImRE__wrCuQV5WcUXh7K3Nh6_UjVJGgEj9LRpCHgt8wn1ipExa_pbXaTsKbbRCnDwScd_IQlhgPigqXKUeyunw-Oa0yXcviiWgyn5AyMKdHYFY10bIh98VxzLuZw9jxBA-O8-FGaPrOKc3TNjI4VmK1FsSQtf3T3Mn0hMZxJkcPafv6-Pd_OuXkU7FikSrKPkNU1KlRH3B-8uITp-FQD0ySXRwMg80meiJZ5Q59HhdqaPSdssSN_uU4V_6MSO005TOGWzrre38fVnx5DEGRMZa1DZV75XKlMVMZIKqgvKwoV_uaIGEeWko-OcvBl92bQuQ
+          type: string
+      type: object
+    hashRequest:
+      properties:
+        payload:
+          example: hello world
+          type: object
+        algo:
+          example: SHA-256
+          type: object
+      type: object
+    jwtVerifyRequest:
+      properties:
+        jwtToken:
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJTTTAwMUBoc2JjLWJhbmstc2luZ2xlUGF5bWVudEluc3RydWN0aW9uU2luZ2Fwb3JlIiwiYXVkIjoiaHR0cHM6Ly9leGFtcGxlLXNlcnZpY2UtcHJvdmlkZXIuY29tLyIsImtpZCI6InNpZ25hdHVyZS1rZXktMTIwMjI0IiwiaXNzIjoiaHR0cHM6Ly9ydWJ5LnRyZWFzdXJ5LWZhY3RvcnkuY29tL2dhdGV3YXkiLCJwYXlsb2FkX2hhc2giOiI3NjYzZWNiYjc0NGE1YjFjNTJmMmFlZTMyYWVlYmEyMDMyOTFhMWQxMWQyOTIwZjAxNWQ1ZjYyMmRmYjdkMWU4IiwiZXhwIjoxNzg4MDcyNjMzLCJpYXQiOjE3MTA5MTk0MjgsImp0aSI6IjcxN2NhMTJiLWU1Y2QtNDVkMy04NzU0LTQ4NDhmYTI0NGRjMiJ9.TgI_-Vdl75mVmXYT2vKkImRE__wrCuQV5WcUXh7K3Nh6_UjVJGgEj9LRpCHgt8wn1ipExa_pbXaTsKbbRCnDwScd_IQlhgPigqXKUeyunw-Oa0yXcviiWgyn5AyMKdHYFY10bIh98VxzLuZw9jxBA-O8-FGaPrOKc3TNjI4VmK1FsSQtf3T3Mn0hMZxJkcPafv6-Pd_OuXkU7FikSrKPkNU1KlRH3B-8uITp-FQD0ySXRwMg80meiJZ5Q59HhdqaPSdssSN_uU4V_6MSO005TOGWzrre38fVnx5DEGRMZa1DZV75XKlMVMZIKqgvKwoV_uaIGEeWko-OcvBl92bQuQ
+          type: string
+        publicKey:
+          example: hsbc-public.key
+          type: string
+      type: object
+    successResponseDecode_meta:
+      example:
+        code: 200
+        message: Compress successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: Compress successfully
+          type: string
+      type: object
+    successResponseDecode_data_inner:
+      example:
+        inputStr: eyJhbGciOi...
+      properties:
+        inputStr:
+          example: eyJhbGciOi...
+          type: string
+    successResponseEncrypt_data_inner:
+      example:
+        encryptStr: eyJhbGciOi...
+      properties:
+        encryptStr:
+          example: eyJhbGciOi...
+          type: string
+    successResponseDecrypt_meta:
+      example:
+        code: 200
+        message: Decrypt successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: Decrypt successfully
+          type: string
+      type: object
+    successResponseDecrypt_data_inner:
+      example:
+        DecryptStr: eyJhbGciOi...
+      properties:
+        DecryptStr:
+          example: eyJhbGciOi...
+          type: string
+    successResponseCheckJwtExpiry_meta:
+      example:
+        code: 200
+        message: Jwt-Token expiry check successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: Jwt-Token expiry check successfully
+          type: string
+      type: object
+    successResponseCheckJwtExpiry_data_inner:
+      example:
+        jwtToken: eyJhbGciOi...
+      properties:
+        jwtToken:
+          example: eyJhbGciOi...
+          type: string
+    successResponseHash_meta:
+      example:
+        code: 200
+        message: Payload-hash created successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: Payload-hash created successfully
+          type: string
+      type: object
+    successResponseHash_data_inner:
+      example:
+        payloadHash: eyJhbGciOi...
+      properties:
+        payloadHash:
+          example: eyJhbGciOi...
+          type: string
+    successResponseVerifyJwt_meta:
+      example:
+        code: 200
+        message: jwtToken verify successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: jwtToken verify successfully
+          type: string
+      type: object
+    successResponseConfig_data_inner_schemaMetaData_clientConfing:
+      example:
+        grantType: clent-credentials
+      properties:
+        grantType:
+          example: clent-credentials
+          type: string
+      type: object
+    successResponseConfig_data_inner_schemaMetaData:
+      example:
+        clientPath: /banking/transactions/v2
+        basePath: /gw/dbapi
+        host: simulator-api.db.com
+        accountPath: /banking/cashAccounts/v2/
+        clientConfing:
+          grantType: clent-credentials
+      properties:
+        clientConfing:
+          $ref: '#/components/schemas/successResponseConfig_data_inner_schemaMetaData_clientConfing'
+        host:
+          example: simulator-api.db.com
+          type: string
+        basePath:
+          example: /gw/dbapi
+          type: string
+        accountPath:
+          example: /banking/cashAccounts/v2/
+          type: string
+        clientPath:
+          example: /banking/transactions/v2
+          type: string
+      type: object
+    successResponseConfig_data_inner:
+      example:
+        schemaVersion: 1.0.0
+        targetEntity: kyriba-to-deutsche-bank
+        targetEntityType: post-pipeline-accounting-data-expi
+        schemaId: "65"
+        schemaProvider: Starfish Aggregator
+        schemaType: inputSanitizationSchema
+        schemaMetaData:
+          clientPath: /banking/transactions/v2
+          basePath: /gw/dbapi
+          host: simulator-api.db.com
+          accountPath: /banking/cashAccounts/v2/
+          clientConfing:
+            grantType: clent-credentials
+      properties:
+        schemaId:
+          example: "65"
+          type: string
+        schemaVersion:
+          example: 1.0.0
+          type: string
+        schemaType:
+          example: inputSanitizationSchema
+          type: string
+        schemaProvider:
+          example: Starfish Aggregator
+          type: string
+        targetEntity:
+          example: kyriba-to-deutsche-bank
+          type: string
+        targetEntityType:
+          example: post-pipeline-accounting-data-expi
+          type: string
+        schemaMetaData:
+          $ref: '#/components/schemas/successResponseConfig_data_inner_schemaMetaData'
+    successResponseSecrets_meta:
+      example:
+        code: 200
+        message: secrets fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: secrets fetch successfully
+          type: string
+      type: object
+    successResponseSecrets_data_inner:
+      example:
+        secrets: ehkdh-sc-bank
+      properties:
+        secrets:
+          example: ehkdh-sc-bank
+          type: string
+    successResponseKid_meta:
+      example:
+        code: 200
+        message: keyId fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: keyId fetch successfully
+          type: string
+      type: object
+    successResponseKid_data_inner:
+      example:
+        keyId: hsbc-public.key
+      properties:
+        keyId:
+          example: hsbc-public.key
+          type: string
+    successResponseAuthToken_meta:
+      example:
+        code: 200
+        message: Token fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: Token fetch successfully
+          type: string
+      type: object
+    successResponseAuthToken_data_inner:
+      example:
+        Access-Token: lfkhfjefekfjefgek
+      properties:
+        Access-Token:
+          example: lfkhfjefekfjefgek
+          type: string
+    successResponseTpp_meta:
+      example:
+        code: 200
+        message: OnboardingTpp fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: OnboardingTpp fetch successfully
+          type: string
+      type: object
+    successResponseTpp_data_inner:
+      example:
+        name: sc-bank
+        id: lfkhfjefekfjefgek
+        webhookUrl: lfkhfjefekfjefgek
+      properties:
+        id:
+          example: lfkhfjefekfjefgek
+          type: string
+        name:
+          example: sc-bank
+          type: string
+        webhookUrl:
+          example: lfkhfjefekfjefgek
+          type: string
+    successResponseUsers_meta:
+      example:
+        code: 200
+        message: User fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: User fetch successfully
+          type: string
+      type: object
+    successResponseUsers_data_inner:
+      example:
+        consentId: lfkhfjefekfjefgek
+        userUuid: lfkhfjefekfjefgek
+        emailId: lfkhfjefekfjefgek
+        onboardingTpp: lfkhfjefekfjefgek
+      properties:
+        userUuid:
+          example: lfkhfjefekfjefgek
+          type: string
+        onboardingTpp:
+          example: lfkhfjefekfjefgek
+          type: string
+        consentId:
+          example: lfkhfjefekfjefgek
+          type: string
+        emailId:
+          example: lfkhfjefekfjefgek
+          type: string
+    successResponseConsents_meta:
+      example:
+        code: 200
+        message: subcription fetch successfully
+      properties:
+        code:
+          example: 200
+          type: number
+        message:
+          example: subcription fetch successfully
+          type: string
+      type: object
+    successResponseConsents_data_inner_data_services_inner:
+      example:
+        domain: accountInfo
+        name: Bank Transactions
+        id: bankTransactions
+        status: ACTIVE
+      properties:
+        name:
+          example: Bank Transactions
+          type: string
+        status:
+          example: ACTIVE
+          type: string
+        id:
+          example: bankTransactions
+          type: string
+        domain:
+          example: accountInfo
+          type: string
+      type: object
+    successResponseConsents_data_inner_data:
+      example:
+        country: Global
+        countryFlag: global.png
+        channel: API
+        aggregatorLogo: starfish_only_logo.png
+        aggregatorName: Starfish Digital
+        aggregatorId: starfish
+        services:
+        - domain: accountInfo
+          name: Bank Transactions
+          id: bankTransactions
+          status: ACTIVE
+        - domain: accountInfo
+          name: Bank Transactions
+          id: bankTransactions
+          status: ACTIVE
+        orgId: "9616833"
+        status: ACTIVE
+      properties:
+        services:
+          items:
+            $ref: '#/components/schemas/successResponseConsents_data_inner_data_services_inner'
+          type: array
+        aggregatorLogo:
+          example: starfish_only_logo.png
+          type: string
+        aggregatorName:
+          example: Starfish Digital
+          type: string
+        aggregatorId:
+          example: starfish
+          type: string
+        country:
+          example: Global
+          type: string
+        countryFlag:
+          example: global.png
+          type: string
+        channel:
+          example: API
+          type: string
+        orgId:
+          example: "9616833"
+          type: string
+        status:
+          example: ACTIVE
+          type: string
+      type: object
+    successResponseConsents_data_inner:
+      example:
+        resourceSelection: true
+        institutionId: netsuite-erp
+        data:
+          country: Global
+          countryFlag: global.png
+          channel: API
+          aggregatorLogo: starfish_only_logo.png
+          aggregatorName: Starfish Digital
+          aggregatorId: starfish
+          services:
+          - domain: accountInfo
+            name: Bank Transactions
+            id: bankTransactions
+            status: ACTIVE
+          - domain: accountInfo
+            name: Bank Transactions
+            id: bankTransactions
+            status: ACTIVE
+          orgId: "9616833"
+          status: ACTIVE
+        offlineApproval: false
+        environmentType: SANDBOX
+        formlyId: netsuite
+        date_creation: 2024-05-10T12:32:24.115Z
+        tenantName: rohit-dev-local
+        institutionName: Netsuite
+        institutionLogo: netsuite.png
+        userUuid: 0oagsbs51vewwiPuO697
+        subType: Account-Information
+        institutionSchemaId: ""
+      properties:
+        tenantName:
+          example: rohit-dev-local
+          type: string
+        userUuid:
+          example: 0oagsbs51vewwiPuO697
+          type: string
+        institutionName:
+          example: Netsuite
+          type: string
+        institutionId:
+          example: netsuite-erp
+          type: string
+        institutionLogo:
+          example: netsuite.png
+          type: string
+        date_creation:
+          example: 2024-05-10T12:32:24.115Z
+          type: string
+        institutionSchemaId:
+          example: ""
+          type: string
+        formlyId:
+          example: netsuite
+          type: string
+        subType:
+          example: Account-Information
+          type: string
+        resourceSelection:
+          example: true
+          type: boolean
+        offlineApproval:
+          example: false
+          type: boolean
+        environmentType:
+          example: SANDBOX
+          type: string
+        data:
+          $ref: '#/components/schemas/successResponseConsents_data_inner_data'
+      type: object
+    ErrorResponseNotFound_meta:
+      example:
+        code: 404
+        message: No data found
+      properties:
+        code:
+          example: 404
+          type: number
+        message:
+          example: No data found
+          type: string
+      type: object
+    ErrorResponseNotFound_data:
+      example:
+        reason: No data found
+      properties:
+        reason:
+          example: No data found
+          type: string
+      type: object
+    ErrorResponseUnauthorized_meta:
+      example:
+        code: 401
+        message: Unauthorized
+      properties:
+        code:
+          example: 401
+          type: number
+        message:
+          example: Unauthorized
+          type: string
+      type: object
+    ErrorResponseUnauthorized_data:
+      example:
+        reason: Unauthorized
+      properties:
+        reason:
+          example: Unauthorized
+          type: string
+      type: object
+    ErrorResponseBadRequest_meta:
+      example:
+        code: 400
+        message: Bad Request
+      properties:
+        code:
+          example: 400
+          type: number
+        message:
+          example: Bad Request
+          type: string
+      type: object
+    ErrorResponseBadRequest_data:
+      example:
+        reason: Invalid data provided
+      properties:
+        reason:
+          example: Invalid data provided
+          type: string
+      type: object
+    ErrorResponseForbidden_meta:
+      properties:
+        code:
+          example: 403
+          type: number
+        message:
+          example: Forbidden
+          type: string
+      type: object
+    ErrorResponseForbidden_data:
+      properties:
+        reason:
+          example: Forbidden error
+          type: string
+      type: object
+    ErrorResponseForServerError_meta:
+      example:
+        code: 500
+        message: Server error
+      properties:
+        code:
+          example: 500
+          type: number
+        message:
+          example: Server error
+          type: string
+      type: object
+    ErrorResponseForServerError_data:
+      example:
+        reason: Internal Server Error
+      properties:
+        reason:
+          example: Internal Server Error
+          type: string
+      type: object
+    encryptRequest_parameters:
+      properties:
+        ivStr:
+          example: 6d65726b6c656d65726b6c656d65726b
+          type: string
+      type: object
