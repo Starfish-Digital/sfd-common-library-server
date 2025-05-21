@@ -16,7 +16,8 @@ async function connectDB(data) {
     const environmentData = await parameterStoreService.getparametersFromAWS(envVariables);
     const localFilePath = await schema(data);
 
-       const client = new MongoClient(environmentData[`${process.env.ENV}-database-url`], {
+     const client = new MongoClient(environmentData[`${process.env.ENV}-database-url`], {
+
       tlsCAFile: localFilePath,
       useNewUrlParser: true,
       useUnifiedTopology: true,

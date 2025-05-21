@@ -15,26 +15,29 @@ const Boom = require('@hapi/boom');
 
 const checkJwtExpiry = async (request, response) => {
   try {
-
-
     const { jwtToken } = request.body;
-
 
     const decoded = jwtDecodeHelper(jwtToken);
 
+    // If decoding failed and jwtDecodeHelper returned an error message
+    if (!decoded || decoded.success === false) {
+      throw {
+        status: 400,
+        message: decoded?.message || 'Invalid JWT token',
+      };
+    }
 
     return response.status(200).json(Service.successResponse({
       decodedPayload: decoded
     }));
   } catch (e) {
-
-
     return response.status(e.status || 500).json(Service.serverResponse(
       e.message || 'Server Error',
       e.status || 500
     ));
   }
 };
+
 
 
 /**
@@ -55,9 +58,6 @@ const refreshToken = async (request, response) => {
 
       return response.status(400).json(Service.badRequestResponse('Token is required', 400));
     }
-
-
-
 
     const payload = jwt.decode(access_Token);
 
