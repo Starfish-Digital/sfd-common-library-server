@@ -864,7 +864,7 @@ components:
     certificatePath:
       description: s3/dev-certificates-bucket
       example: s3/dev-certificates-bucket
-      explode: true
+      explode: false
       in: query
       name: certificatePath
       required: true
