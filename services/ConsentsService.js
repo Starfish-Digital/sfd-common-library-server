@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service');
-const { connectDB } = require('../utils/db')
+const connectToMongoDB = require('../utils/db');
 /**
 * Get consets by accountId,bic,consentId,userUuid,institutionId and accountNumber
 *
@@ -14,6 +14,7 @@ const { connectDB } = require('../utils/db')
 * */
 
 const getConsentById = async (request, response) => {
+  let mongoClient;
   try {
 
     const { accountId, bic, consentId, userUuid, institutionId, accountNumber } = request.query;
@@ -25,7 +26,8 @@ const getConsentById = async (request, response) => {
     }
 
 
-    const db = await connectDB();
+    mongoClient = await connectToMongoDB();
+    const db = mongoClient.db('AA');
 
 
 
@@ -55,6 +57,12 @@ const getConsentById = async (request, response) => {
       e.message || 'Server Error',
       e.status || 500
     ));
+  }
+  finally {
+    if (mongoClient) {
+      console.log('Closing MongoDB connection...');
+      await mongoClient.close();
+    }
   }
 };
 

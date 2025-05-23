@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 // const { query } = require('winston');
 const Service = require('./Service');
-const { connectDB } = require('../utils/db')
-
+const connectToMongoDB = require('../utils/db');
 /**
 * Get onboarding TPP by institutionId
 *
@@ -12,6 +11,7 @@ const { connectDB } = require('../utils/db')
 const getOnboardingTPPByInstitutionId = (request, response) => new Promise(
 
   async (resolve, reject) => {
+    let mongoClient;
     const { name } = request.query
     if (!name) {
 
@@ -19,8 +19,8 @@ const getOnboardingTPPByInstitutionId = (request, response) => new Promise(
     }
     try {
 
-      const db = await connectDB();
-
+      mongoClient = await connectToMongoDB();
+      const db = mongoClient.db('AA');
 
 
       const TppData = await db.collection('onboardingTPP').findOne({ name });
@@ -39,6 +39,12 @@ const getOnboardingTPPByInstitutionId = (request, response) => new Promise(
         e.message || 'Server Error',
         e.status || 500
       ));
+    }
+    finally {
+      if (mongoClient) {
+        console.log('Closing MongoDB connection...');
+        await mongoClient.close();
+      }
     }
   },
 );

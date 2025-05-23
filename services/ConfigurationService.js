@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service');
-const { connectDB } = require('../utils/db');
+const connectToMongoDB = require('../utils/db');
 // const { MongoClient } = require('mongodb');
 
 
@@ -14,6 +14,7 @@ const { connectDB } = require('../utils/db');
 * */
 
 const getInstitutionConfig = async (request, response) => {
+  let mongoClient;
   try {
 
 
@@ -25,7 +26,8 @@ const getInstitutionConfig = async (request, response) => {
     }
 
 
-    const db = await connectDB();
+    mongoClient = await connectToMongoDB();
+      const db = mongoClient.db('AA');
 
 
 
@@ -37,15 +39,19 @@ const getInstitutionConfig = async (request, response) => {
     }
 
 
-    return response.status(200).json(Service.successResponse({
-      institutionConfig
-    }));
+    return response.status(200).json(Service.successResponse(institutionConfig ));
   } catch (e) {
 
     return response.status(e.status || 500).json(Service.serverResponse(
       e.message || 'Server Error',
       e.status || 500
     ));
+  }
+  finally {
+    if (mongoClient) {
+      console.log('Closing MongoDB connection...');
+      await mongoClient.close();
+    }
   }
 };
 

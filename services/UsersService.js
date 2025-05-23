@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service');
-const { connectDB } = require('../utils/db')
+const connectToMongoDB = require('../utils/db');
 /**
 * Get users by userUuid
 *
@@ -14,6 +14,7 @@ const { connectDB } = require('../utils/db')
 const getUsersByUserUuid = (request, response) => new Promise(
 
   async (resolve, reject) => {
+    let mongoClient;
     const { emailId, onboardingTpp, consentId, userUuid, institutionId } = request.query
     if (!userUuid) {
 
@@ -22,13 +23,19 @@ const getUsersByUserUuid = (request, response) => new Promise(
     }
     try {
 
-      const db = await connectDB();
+      mongoClient = await connectToMongoDB();
+      const db = mongoClient.db('AA');
 
-      const searchQuery = { emailId };
+      const searchQuery = {};
+      if (emailId) searchQuery.emailId = emailId;
       if (consentId) searchQuery.consentId = consentId;
       if (userUuid) searchQuery.userUuid = userUuid;
-      if (institutionId) searchQuery.institutionId = institutionId;
-      if (onboardingTpp) searchQuery.institutionId = onboardingTpp;
+      if (institutionId) {
+        searchQuery.institutionId = institutionId;
+      } else if (onboardingTpp) {
+        searchQuery.institutionId = onboardingTpp;
+      }
+      
       console.log('Searching subscription with:', searchQuery);
 
       const userData = await db.collection('users').findOne(searchQuery);
@@ -40,7 +47,7 @@ const getUsersByUserUuid = (request, response) => new Promise(
       }
 
 
-      return response.status(200).json(Service.successResponse({ userData }));
+      return response.status(200).json(Service.successResponse( userData ));
 
     } catch (e) {
 
@@ -49,6 +56,12 @@ const getUsersByUserUuid = (request, response) => new Promise(
         e.message || 'Invalid JWT',
         e.status || 500
       ));
+    }
+    finally {
+      if (mongoClient) {
+        console.log('Closing MongoDB connection...');
+        await mongoClient.close();
+      }
     }
   },
 );

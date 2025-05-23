@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const Service = require('./Service');
-const { connectDB } = require('../utils/db')
+const connectToMongoDB = require('../utils/db');
 
 /**
 * Get subscription data by subscriptionId and institutionId
@@ -14,6 +14,7 @@ const { connectDB } = require('../utils/db')
 
 const getSubscriptionBySubscriptionId = (request, response) => new Promise(
   async (resolve, reject) => {
+    let mongoClient;
     const { subscriptionId, consentId, userUuid, institutionId } = request.query;
 
     if (!subscriptionId) {
@@ -24,7 +25,8 @@ const getSubscriptionBySubscriptionId = (request, response) => new Promise(
 
     try {
 
-      const db = await connectDB();
+      mongoClient = await connectToMongoDB();
+      const db = mongoClient.db('AA');
 
 
 
@@ -55,6 +57,12 @@ const getSubscriptionBySubscriptionId = (request, response) => new Promise(
         e.message || 'Server Error',
         e.status || 400
       ));
+    }
+    finally {
+      if (mongoClient) {
+        console.log('Closing MongoDB connection...');
+        await mongoClient.close();
+      }
     }
   },
 );

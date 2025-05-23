@@ -297,3 +297,21 @@
 {"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-20T04:36:29.208Z"}
 {"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-21T05:51:44.138Z"}
 {"level":"error","message":"Error occurred while refreshing token: Unterminated string in JSON at position 107","service":"user-service","stack":"SyntaxError: Unterminated string in JSON at position 107\n    at JSON.parse (<anonymous>)\n    at Object.jwsDecode [as decode] (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/jws/lib/verify-stream.js:71:20)\n    at module.exports [as decode] (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/jsonwebtoken/decode.js:5:21)\n    at refreshToken (/home/areeb/Documents/nodeProject/sfd-common-library-server/services/AuthenticationService.js:65:25)\n    at Controller.handleRequest (/home/areeb/Documents/nodeProject/sfd-common-library-server/controllers/Controller.js:116:13)\n    at refreshToken (/home/areeb/Documents/nodeProject/sfd-common-library-server/controllers/AuthenticationController.js:16:20)\n    at Layer.handle [as handle_request] (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/areeb/Documents/nodeProject/sfd-common-library-server/node_modules/express/lib/router/layer.js:95:5)","timestamp":"2025-05-21T06:00:08.824Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:18:18.217Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:32:58.334Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:33:16.936Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:33:56.600Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:37:18.638Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:37:36.650Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:40:10.353Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:40:49.437Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T07:41:39.764Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T08:35:54.516Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T08:36:54.254Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T08:37:39.999Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:25:46.238Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:26:31.154Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:28:41.732Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:29:31.921Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:36:34.026Z"}
+{"level":"info","message":"Express server running","service":"user-service","timestamp":"2025-05-23T10:39:18.505Z"}
