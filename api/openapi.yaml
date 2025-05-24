@@ -42,27 +42,24 @@ paths:
       - secrets
       x-eov-operation-handler: controllers/SecretsController
   /certificate:
-    get:
+    post:
       operationId: getPublicKeyByKid
-      parameters:
-      - description: Provide kid
-        example: hsbc-public.key
-        explode: true
-        in: query
-        name: kid
+      requestBody:
         required: true
-        schema:
-          type: string
-        style: form
-      - description: s3/dev-certificates-bucket
-        example: s3/dev-certificates-bucket
-        explode: true
-        in: query
-        name: certificatePath
-        required: true
-        schema:
-          type: string
-        style: form
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - kid
+                - certificatePath
+              properties:
+                kid:
+                  type: string
+                  example: hsbc-public.key
+                certificatePath:
+                  type: string
+                  example: s3/dev-certificates-bucket/path/to/cert.pem
       responses:
         "200":
           content:
